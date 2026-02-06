@@ -3643,6 +3643,56 @@
             }
             localStorage.setItem('TM_licenseValid', 'true');
 
+            // Intercept fetch calls to TypingMind servers
+            var originalFetch = window.fetch;
+            window.fetch = function (url, options) {
+                var urlStr = typeof url === 'string' ? url : url.toString();
+                // Redirect TypingMind API calls to our mock
+                if (urlStr.indexOf('api.typingmind.com') > -1 ||
+                    urlStr.indexOf('typingmind.com/api') > -1 ||
+                    (urlStr.indexOf('typingmind.com') > -1 && (urlStr.indexOf('license') > -1 || urlStr.indexOf('validate') > -1 || urlStr.indexOf('auth') > -1))) {
+                    // Return mock response
+                    return Promise.resolve(new Response(JSON.stringify({
+                        valid: true,
+                        activated: true,
+                        success: true,
+                        licenseKey: 'bypass-license',
+                        payload: { email: 'user@local.dev', plan: 'lifetime', features: ['all'] },
+                        user: { id: 'local-user', email: 'user@local.dev', plan: 'lifetime' }
+                    }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+                }
+                return originalFetch.apply(this, arguments);
+            };
+
+            // Also intercept XMLHttpRequest
+            var originalXHROpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function (method, url) {
+                var urlStr = url.toString();
+                if (urlStr.indexOf('api.typingmind.com') > -1 ||
+                    urlStr.indexOf('typingmind.com/api') > -1 ||
+                    (urlStr.indexOf('typingmind.com') > -1 && (urlStr.indexOf('license') > -1 || urlStr.indexOf('validate') > -1))) {
+                    // Redirect to a data URL that returns success
+                    this._mockResponse = true;
+                }
+                return originalXHROpen.apply(this, arguments);
+            };
+
+            var originalXHRSend = XMLHttpRequest.prototype.send;
+            XMLHttpRequest.prototype.send = function () {
+                if (this._mockResponse) {
+                    var self = this;
+                    setTimeout(function () {
+                        Object.defineProperty(self, 'responseText', { value: JSON.stringify({ valid: true, activated: true, success: true }) });
+                        Object.defineProperty(self, 'status', { value: 200 });
+                        Object.defineProperty(self, 'readyState', { value: 4 });
+                        if (self.onreadystatechange) self.onreadystatechange();
+                        if (self.onload) self.onload();
+                    }, 10);
+                    return;
+                }
+                return originalXHRSend.apply(this, arguments);
+            };
+
             // Add CSS to hide promotional elements
             var style = document.createElement('style');
             style.textContent = '#main-buy-license-button, #nav-buy-button, [href*="checkout"], [href*="pricing"], [data-testid*="license"], .fixed[role="dialog"], .fixed[aria-modal="true"], [class*="animate-pulse"][class*="fixed"], [class*="animate-bounce"][class*="fixed"], .fixed.right-0.top-0, .fixed.top-0.right-0, button[class*="fixed"][class*="right"], a[class*="fixed"][class*="right"] { display: none !important; visibility: hidden !important; pointer-events: none !important; }';
@@ -3656,10 +3706,9 @@
                     for (var i = 0; i < elements.length; i++) {
                         var el = elements[i];
                         var text = (el.innerText || '').toLowerCase();
-                        var style = window.getComputedStyle(el);
-                        // Check for banner keywords or fixed position elements with promo text
+                        var elStyle = window.getComputedStyle(el);
                         if ((text.indexOf('% off') > -1 || text.indexOf('buy') > -1 || text.indexOf('license') > -1) &&
-                            (style.position === 'fixed' || style.position === 'absolute')) {
+                            (elStyle.position === 'fixed' || elStyle.position === 'absolute')) {
                             el.style.display = 'none';
                             el.style.visibility = 'hidden';
                         }
@@ -3686,7 +3735,7 @@
                     observer.observe(document.body, { childList: true, subtree: true });
                 }
             });
-        } catch (e) { }
+        } catch (e) { console.error('Bypass error:', e); }
     </script>
 </body>
 
