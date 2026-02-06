@@ -3639,111 +3639,34 @@
         try {
             // Set dummy license key
             if (!localStorage.getItem('TM_useLicenseKey')) {
-                console.log('Setting dummy license key to bypass checks');
                 localStorage.setItem('TM_useLicenseKey', 'bypass-license');
             }
-            // Also set license as valid
             localStorage.setItem('TM_licenseValid', 'true');
 
-            document.addEventListener('DOMContentLoaded', () => {
-                const style = document.createElement('style');
-                style.innerHTML = `
-                    #main-buy-license-button, 
-                    [href*="checkout"], 
-                    [href*="typingmind.com/pricing"],
-                    [href*="buy"],
-                    [data-testid*="license"],
-                    [data-testid*="buy"],
-                    [class*="sale"],
-                    [class*="promo"],
-                    [class*="discount"],
-                    [class*="banner"] { 
-                        display: none !important; 
-                    }
-                    /* Hide any fixed/absolute positioned elements that look like popups */
-                    .fixed[role="dialog"],
-                    .fixed[aria-modal="true"],
-                    div[style*="z-index: 9999"],
-                    div[style*="z-index:9999"] {
-                        display: none !important;
-                    }
-                `;
-                document.head.appendChild(style);
+            // Add CSS to hide promotional elements
+            var style = document.createElement('style');
+            style.textContent = '#main-buy-license-button, [href*="checkout"], [href*="pricing"], [data-testid*="license"], .fixed[role="dialog"], .fixed[aria-modal="true"] { display: none !important; visibility: hidden !important; }';
+            document.head.appendChild(style);
 
-                // Aggressive hide function
-                function hidePromoElements() {
-                    const keywords = ['Try for free', 'Get a lifetime license', 'lifetime license',
-                        'Buy now', 'Purchase', '50% off', '% off', 'Annual sale',
-                        'Special offer', 'Limited time', 'Upgrade now', 'sale'];
-
-                    // Check all elements
-                    document.querySelectorAll('*').forEach(el => {
-                        if (el.innerText) {
-                            for (const kw of keywords) {
-                                if (el.innerText.toLowerCase().includes(kw.toLowerCase())) {
-                                    // Find the modal/popup parent
-                                    let parent = el;
-                                    for (let i = 0; i < 10; i++) {
-                                        if (parent.parentElement) {
-                                            const style = window.getComputedStyle(parent);
-                                            if (style.position === 'fixed' || style.position === 'absolute' ||
-                                                parent.getAttribute('role') === 'dialog' ||
-                                                parent.classList.contains('modal') ||
-                                                parent.getAttribute('aria-modal') === 'true') {
-                                                parent.style.display = 'none';
-                                                parent.style.visibility = 'hidden';
-                                                parent.style.opacity = '0';
-                                                parent.style.pointerEvents = 'none';
-                                                break;
-                                            }
-                                            parent = parent.parentElement;
-                                        }
-                                    }
-                                    el.style.display = 'none';
-                                    break;
+            // Simple observer for dynamic popups
+            document.addEventListener('DOMContentLoaded', function () {
+                var observer = new MutationObserver(function (mutations) {
+                    mutations.forEach(function (mutation) {
+                        mutation.addedNodes.forEach(function (node) {
+                            if (node.nodeType === 1 && node.innerText) {
+                                var text = node.innerText.toLowerCase();
+                                if (text.indexOf('try for free') > -1 || text.indexOf('lifetime license') > -1 || text.indexOf('buy now') > -1) {
+                                    node.style.display = 'none';
                                 }
                             }
-                        }
+                        });
                     });
-                }
-
-                // Run immediately
-                hidePromoElements();
-
-                // Run again after a short delay for late-loading elements
-                setTimeout(hidePromoElements, 500);
-                setTimeout(hidePromoElements, 1500);
-                setTimeout(hidePromoElements, 3000);
-
-                // Observer to catch dynamic popups
-                const observer = new MutationObserver((mutations) => {
-                    for (const mutation of mutations) {
-                        for (const node of mutation.addedNodes) {
-                            if (node.nodeType === 1) {
-                                const text = node.innerText || '';
-                                const keywords = ['Try for free', 'lifetime license', 'Buy now', '% off', 'Annual', 'sale', 'Special offer'];
-                                for (const kw of keywords) {
-                                    if (text.toLowerCase().includes(kw.toLowerCase())) {
-                                        node.style.display = 'none';
-                                        node.style.visibility = 'hidden';
-                                        node.style.pointerEvents = 'none';
-                                        // Also try to hide the parent if it's a modal
-                                        if (node.parentElement) {
-                                            const parentStyle = window.getComputedStyle(node.parentElement);
-                                            if (parentStyle.position === 'fixed' || node.parentElement.getAttribute('role') === 'dialog') {
-                                                node.parentElement.style.display = 'none';
-                                            }
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
                 });
-                observer.observe(document.body, { childList: true, subtree: true });
+                if (document.body) {
+                    observer.observe(document.body, { childList: true, subtree: true });
+                }
             });
-        } catch (e) { console.error('Bypass script error', e); }
+        } catch (e) { }
     </script>
 </body>
 
