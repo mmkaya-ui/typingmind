@@ -1,0 +1,23 @@
+{
+    "valid": true,
+    "activated": true,
+    "licenseKey": "bypass-license",
+    "payload": {
+        "email": "user@local.dev",
+        "plan": "premium_plus",
+        "type": "lifetime",
+        "features": [
+            "all",
+            "pro",
+            "premium",
+            "enterprise",
+            "interactive_canvas",
+            "plugins",
+            "web_search",
+            "image_generation",
+            "system_prompt",
+            "cloud_sync"
+        ],
+        "expiresAt": null
+    }
+}

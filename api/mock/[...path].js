@@ -11,8 +11,20 @@ export default function handler(req, res) {
             licenseKey: 'bypass-license',
             payload: {
                 email: 'user@local.dev',
-                plan: 'lifetime',
-                features: ['all'],
+                plan: 'premium_plus',
+                type: 'lifetime',
+                features: [
+                    "all",
+                    "pro",
+                    "premium",
+                    "enterprise",
+                    "interactive_canvas",
+                    "plugins",
+                    "web_search",
+                    "image_generation",
+                    "system_prompt",
+                    "cloud_sync"
+                ],
                 expiresAt: null
             }
         });
@@ -36,6 +48,30 @@ export default function handler(req, res) {
             success: true,
             data: {}
         });
+    }
+
+    // Mock plugins endpoint
+    if (fullPath.includes('plugins')) {
+        return res.status(200).json([
+            {
+                id: 'web-search',
+                title: 'Web Search',
+                description: 'Search the web using Google',
+                iconURL: 'https://typingmind.com/assets/plugins/web-search.png',
+                manifestUrl: 'https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/web-search/manifest.json',
+                uuid: 'web-search-uuid',
+                version: 1
+            },
+            {
+                id: 'dsk-plugin',
+                title: 'DeepSeek Plugin',
+                description: 'DeepSeek integration',
+                iconURL: 'https://typingmind.com/assets/plugins/deepseek.png',
+                manifestUrl: 'https://raw.githubusercontent.com/someuser/deepseek-plugin/main/manifest.json', // Placeholder
+                uuid: 'dsk-uuid',
+                version: 1
+            }
+        ]);
     }
 
     // Default: return success
