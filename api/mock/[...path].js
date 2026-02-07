@@ -52,26 +52,31 @@ export default function handler(req, res) {
 
     // Mock plugins endpoint
     if (fullPath.includes('plugins')) {
-        return res.status(200).json([
-            {
-                id: 'web-search',
-                title: 'Web Search',
-                description: 'Search the web using Google',
-                iconURL: 'https://typingmind.com/assets/plugins/web-search.png',
-                manifestUrl: 'https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/web-search/manifest.json',
-                uuid: 'web-search-uuid',
-                version: 1
-            },
-            {
-                id: 'dsk-plugin',
-                title: 'DeepSeek Plugin',
-                description: 'DeepSeek integration',
-                iconURL: 'https://typingmind.com/assets/plugins/deepseek.png',
-                manifestUrl: 'https://raw.githubusercontent.com/someuser/deepseek-plugin/main/manifest.json', // Placeholder
-                uuid: 'dsk-uuid',
-                version: 1
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            // Assuming this file is at api/mock/[...path].js and src is at root
+            // Need to resolve path correctly based on deployment structure
+            // In local dev with http-server, this file executes.
+            // Let's try to locate src/api/plugins.json relatively.
+
+            // Go up two levels from api/mock to reach root, then into src/api
+            // __dirname is usually the directory of the executing script
+            const pluginsFilePath = path.join(process.cwd(), 'src', 'api', 'plugins.json');
+
+            if (fs.existsSync(pluginsFilePath)) {
+                const fileContent = fs.readFileSync(pluginsFilePath, 'utf8');
+                const plugins = JSON.parse(fileContent);
+                return res.status(200).json(plugins);
+            } else {
+                console.warn('Plugins file not found at:', pluginsFilePath);
+                // Fallback to empty or minimal list if file missing
+                return res.status(200).json([]);
             }
-        ]);
+        } catch (error) {
+            console.error('Error reading plugins.json:', error);
+            return res.status(500).json({ error: 'Failed to load plugins' });
+        }
     }
 
     // Default: return success

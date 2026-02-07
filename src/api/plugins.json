@@ -9,6 +9,78 @@
         "version": 1
     },
     {
+        "id": "dalle-3",
+        "title": "DALL-E 3 Image Generation",
+        "description": "Generate images using DALL-E 3",
+        "iconURL": "https://typingmind.com/assets/plugins/dalle-3.png",
+        "manifestUrl": "https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/dalle-3/manifest.json",
+        "uuid": "dalle-3-uuid",
+        "version": 1
+    },
+    {
+        "id": "stable-diffusion",
+        "title": "Stable Diffusion",
+        "description": "Generate images using Stable Diffusion",
+        "iconURL": "https://typingmind.com/assets/plugins/stable-diffusion.png",
+        "manifestUrl": "https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/stable-diffusion/manifest.json",
+        "uuid": "stable-diffusion-uuid",
+        "version": 1
+    },
+    {
+        "id": "render-charts",
+        "title": "Render Charts",
+        "description": "Visualize data with charts",
+        "iconURL": "https://typingmind.com/assets/plugins/render-charts.png",
+        "manifestUrl": "https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/render-charts/manifest.json",
+        "uuid": "render-charts-uuid",
+        "version": 1
+    },
+    {
+        "id": "detailed-wolfram-alpha",
+        "title": "Wolfram Alpha",
+        "description": "Access computational knowledge and answers",
+        "iconURL": "https://typingmind.com/assets/plugins/wolfram-alpha.png",
+        "manifestUrl": "https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/detailed-wolfram-alpha/manifest.json",
+        "uuid": "wolfram-alpha-uuid",
+        "version": 1
+    },
+    {
+        "id": "java-script-interpreter",
+        "title": "JavaScript Interpreter",
+        "description": "Run JavaScript code in a sandbox",
+        "iconURL": "https://typingmind.com/assets/plugins/javascript-interpreter.png",
+        "manifestUrl": "https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/java-script-interpreter/manifest.json",
+        "uuid": "js-interpreter-uuid",
+        "version": 1
+    },
+    {
+        "id": "python-interpreter",
+        "title": "Python Interpreter",
+        "description": "Run Python code",
+        "iconURL": "https://typingmind.com/assets/plugins/python-interpreter.png",
+        "manifestUrl": "https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/python-interpreter/manifest.json",
+        "uuid": "python-interpreter-uuid",
+        "version": 1
+    },
+    {
+        "id": "qr-code-generator",
+        "title": "QR Code Generator",
+        "description": "Generate QR codes for text or URLs",
+        "iconURL": "https://typingmind.com/assets/plugins/qr-code-generator.png",
+        "manifestUrl": "https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/qr-code-generator/manifest.json",
+        "uuid": "qr-code-uuid",
+        "version": 1
+    },
+    {
+        "id": "icon-designer",
+        "title": "Icon Designer",
+        "description": "Design icons for your apps or websites",
+        "iconURL": "https://typingmind.com/assets/plugins/icon-designer.png",
+        "manifestUrl": "https://raw.githubusercontent.com/TypingMind/typing-mind-plugins/main/icon-designer/manifest.json",
+        "uuid": "icon-designer-uuid",
+        "version": 1
+    },
+    {
         "id": "dsk-plugin",
         "title": "DeepSeek Plugin",
         "description": "DeepSeek integration",
