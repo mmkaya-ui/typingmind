@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const appFile = '../src/_next/static/chunks/pages/_app-16e42bf212981984.js';
-const pluginsFile = '../src/api/plugins.json';
+const appFile = path.join(__dirname, '../src/_next/static/chunks/pages/_app-16e42bf212981984.js');
+const pluginsFile = path.join(__dirname, '../src/api/plugins.json');
 
 try {
     // 1. Read plugins
